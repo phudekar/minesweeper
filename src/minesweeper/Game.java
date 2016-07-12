@@ -1,7 +1,6 @@
 package minesweeper;
 
 import java.util.List;
-import java.util.Optional;
 
 public class Game {
     private final Board board;
@@ -18,8 +17,7 @@ public class Game {
     }
 
     public void openBox(Location location) throws PlayerDiedException {
-        if (board.getValueAt(location).isPresent()
-                && board.getValueAt(location).get() == MINE) {
+        if (board.isMine(location)) {
             throw new PlayerDiedException(score);
         }
 
@@ -34,12 +32,6 @@ public class Game {
 
     private int getNumberOfMines(Location location) {
         List<Location> adjacentLocations = board.getAdjacentLocationsTo(location);
-        int numberOfMines = 0;
-        for (Location adjacentLocation : adjacentLocations) {
-            Optional<Integer> value = board.getValueAt(adjacentLocation);
-            if (value.isPresent() && value.get() == MINE)
-                numberOfMines += 1;
-        }
-        return numberOfMines;
+        return Long.valueOf(adjacentLocations.stream().filter(board::isMine).count()).intValue();
     }
 }
