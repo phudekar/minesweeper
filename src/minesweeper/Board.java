@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static minesweeper.Game.MINE;
+
 public class Board {
     private int rows;
     private int columns;
@@ -44,8 +46,12 @@ public class Board {
             }
         }
         return adjacentLocations.stream()
-                .filter((adjacentLocation) -> locationExists(adjacentLocation))
+                .filter(this::locationExists)
                 .collect(Collectors.toList());
     }
 
+    public boolean isMine(Location location) {
+        Optional<Integer> optionalLocationValue = this.getValueAt(location);
+        return optionalLocationValue.isPresent() && optionalLocationValue.get() == MINE;
+    }
 }
